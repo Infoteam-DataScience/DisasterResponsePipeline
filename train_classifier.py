@@ -41,7 +41,7 @@ def load_data(database_filepath):
     Y = df.drop(columns=ignore).values
 
     # list of all column names
-    category_names = [item for item in dataframe.drop(columns=ignore).columns]
+    category_names = [item for item in df.drop(columns=ignore).columns]
 
     return X, Y, category_names
 
