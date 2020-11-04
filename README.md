@@ -1,5 +1,4 @@
 # Disaster Response Pipeline Project
-
 ## Summary
 In this repository, you'll find a data set containing real messages that were sent during disaster events. You also find a machine learning pipeline to categorize these events.
 
@@ -39,4 +38,7 @@ In the following section there will be a short instruction provided how to inter
 
 3. Go to http://0.0.0.0:3001/
 
+![](./app/app.png)
+
 # Acknowledgements
+Thanks to Figure Eight for providing the .csv files in order to analyze such real word problem's scenarios.
