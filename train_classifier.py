@@ -17,11 +17,11 @@ from sqlalchemy import create_engine
 
 from sklearn.metrics import confusion_matrix, classification_report
 from sklearn.model_selection import GridSearchCV
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, VotingClassifier
+from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier, VotingClassifier, AdaBoostClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer, HashingVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer, HashingVectorizer, TfidfVectorizer
 from sklearn.multioutput import MultiOutputClassifier
 
 
@@ -62,31 +62,18 @@ def tokenize(text):
 def build_model():
 
     # creates new ml pipeline
-    pipeline = Pipeline([
-        ('features', FeatureUnion([
-
-            ('text_count', Pipeline([
-                ('vectorizations', CountVectorizer(tokenizer=tokenize)),
-                ('transformation', TfidfTransformer())
-            ])),
-
-            ('text_hashs', Pipeline([
-                ('HashingMethods', HashingVectorizer(tokenizer=tokenize)),
-                ('transformation', TfidfTransformer())
-            ])),            
-            
-        ])),
-
-        ('classification', MultiOutputClassifier(
-            VotingClassifier(
-            
-                estimators=[
-                    ('randomforest', RandomForestClassifier()),
-                    ('gradboosting', GradientBoostingClassifier())
-                ]
-
-        )))
-    ])
+    pipeline = Pipeline([                
+                ('features', FeatureUnion([
+                    ('text_count', Pipeline([
+                        ('vectorizations', CountVectorizer(tokenizer=tokenize)),
+                        ('transformation', TfidfTransformer())])),
+                    ('text_tfidf', Pipeline([
+                        ('vectorizations', TfidfVectorizer(tokenizer=tokenize))]))])),
+                ('classification', MultiOutputClassifier(VotingClassifier(estimators=[
+                    ('extratress', ExtraTreesClassifier()),
+                    ('rndmforest', RandomForestClassifier()),
+                    ('adaboosted', AdaBoostClassifier())])))
+            ])
 
     # parameters for grid search optimization
     parameters = {        
